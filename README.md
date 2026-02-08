@@ -2,6 +2,8 @@
 
 SeatScout is a lightweight Firefox browser extension that monitors McMaster University MyTimetable course sections and alerts you when seats open.
 
+<img width="256" height="256" alt="icon" src="https://github.com/user-attachments/assets/a604a261-cd3b-4787-ad93-2147d918d2fb" />
+
 It is monitor-only:
 - No MacID
 - No password
@@ -11,6 +13,8 @@ It is monitor-only:
 SeatScout queries the public MyTimetable class-data endpoint and notifies you when availability changes.
 
 ## Features
+
+<img width="384" height="606" alt="image" src="https://github.com/user-attachments/assets/6a5b8db7-001b-4e44-bfc9-f7718013f914" />
 
 - Monitor multiple courses and sections at once
 - Automatic background checking on a configurable interval
@@ -113,4 +117,5 @@ No external servers or APIs are used beyond MyTimetable.
 ## Disclaimer
 
 SeatScout is an independent project and is not affiliated with or endorsed by McMaster University. Use at your own discretion and in accordance with university policies.
+
 
