@@ -10,8 +10,6 @@ It is monitor-only:
 
 SeatScout queries the public MyTimetable class-data endpoint and notifies you when availability changes.
 
----
-
 ## Features
 
 - Monitor multiple courses and sections at once
@@ -22,8 +20,6 @@ SeatScout queries the public MyTimetable class-data endpoint and notifies you wh
   - Settings: control interval and notification behavior
 - No server, no database, no credentials
 - All data stored locally in Firefox
-
----
 
 ## Installation (Firefox)
 
@@ -38,8 +34,6 @@ SeatScout is loaded as a temporary developer extension.
 The SeatScout icon will appear in the toolbar.
 
 Note: Temporary add-ons are removed when Firefox restarts. This is expected Firefox behavior.
-
----
 
 ## How to Use
 
@@ -56,16 +50,12 @@ Note: Temporary add-ons are removed when Firefox restarts. This is expected Fire
 
 If sections do not load, expand Advanced and manually paste the section name exactly as shown on MyTimetable.
 
----
-
 ### Manage watches
 
 - Enable or disable individual watches
 - Enable or disable all watches at once
 - Remove watches when no longer needed
 - View last known open seats and last check time
-
----
 
 ### Settings tab
 
@@ -79,7 +69,6 @@ Options:
 
 Settings are stored locally and persist across browser sessions.
 
----
 
 ## What is VA?
 
@@ -121,7 +110,7 @@ No external servers or APIs are used beyond MyTimetable.
 - Signed Firefox Add-ons release
 - Multi-university support
 
-
 ## Disclaimer
 
 SeatScout is an independent project and is not affiliated with or endorsed by McMaster University. Use at your own discretion and in accordance with university policies.
+
