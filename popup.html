@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SeatScout</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div>
+          <div class="title">SeatScout</div>
+          <div class="subtitle">Monitor MyTimetable seats and alert when they open.</div>
+        </div>
+        <div class="headerActions">
+          <button id="checkNow" class="btn btnPrimary" type="button">Check now</button>
+        </div>
+      </header>
+
+      <nav class="tabs" role="tablist" aria-label="SeatScout tabs">
+        <button class="tab tabActive" id="tabWatches" type="button" role="tab" aria-selected="true" aria-controls="panelWatches">Watches</button>
+        <button class="tab" id="tabSettings" type="button" role="tab" aria-selected="false" aria-controls="panelSettings">Settings</button>
+      </nav>
+
+      <main class="panels">
+        <section id="panelWatches" class="panel" role="tabpanel" aria-labelledby="tabWatches">
+          <section class="card">
+            <div class="cardTitle">Add a watch</div>
+
+            <form id="watchForm" class="form">
+              <div class="grid2">
+                <label class="field">
+                  <span class="label">Term</span>
+                  <input id="term" type="text" inputmode="numeric" placeholder="3202520" required />
+                  <span class="help">McMaster term code used by MyTimetable.</span>
+                </label>
+
+                <label class="field">
+                  <span class="label">Course code</span>
+                  <input id="course" type="text" placeholder="CHEM-1A03" required />
+                  <span class="help">Format like ABCD-1A03.</span>
+                </label>
+              </div>
+
+              <label class="field">
+                <span class="label">VA (optional)</span>
+                <input id="va" type="text" placeholder="Leave blank unless needed" />
+                <span class="help">
+                  Variant attribute used by some courses/terms. If sections do not load, try VA from the course listing, otherwise leave blank.
+                </span>
+              </label>
+
+              <div class="row">
+                <button id="loadSections" class="btn" type="button">Load sections</button>
+                <div id="loadStatus" class="status"></div>
+              </div>
+
+              <label class="field">
+                <span class="label">Section</span>
+                <select id="sectionSelect">
+                  <option value="">Load sections to choose</option>
+                </select>
+                <span class="help">Choose the exact section label, for example LEC C01, TUT 03.</span>
+              </label>
+
+              <details class="advanced">
+                <summary>Advanced</summary>
+                <label class="field">
+                  <span class="label">Manual section text</span>
+                  <input id="sectionManual" type="text" placeholder="Only if dropdown is empty" />
+                  <span class="help">If the dropdown cannot load, paste the section display string exactly as shown on MyTimetable.</span>
+                </label>
+              </details>
+
+              <div class="rowEnd">
+                <button id="addWatch" class="btn btnPrimary" type="submit">Add watch</button>
+              </div>
+
+              <div id="formError" class="error" role="alert" hidden></div>
+            </form>
+          </section>
+
+          <section class="card">
+            <div class="cardTitleRow">
+              <div class="cardTitle">Your watches</div>
+              <div class="row">
+                <button id="enableAll" class="btn btnSmall" type="button">Enable all</button>
+                <button id="disableAll" class="btn btnSmall" type="button">Disable all</button>
+              </div>
+            </div>
+
+            <div id="watchList" class="list"></div>
+            <div id="emptyState" class="empty" hidden>
+              No watches yet. Add one above.
+            </div>
+          </section>
+        </section>
+
+        <section id="panelSettings" class="panel" role="tabpanel" aria-labelledby="tabSettings" hidden>
+          <section class="card">
+            <div class="cardTitle">Settings</div>
+
+            <div class="form">
+              <label class="field">
+                <span class="label">Check interval (minutes)</span>
+                <input id="intervalMinutes" type="number" min="1" step="1" />
+                <span class="help">1 to 2 minutes is usually reasonable. Very low intervals can trigger rate limiting.</span>
+              </label>
+
+              <label class="checkRow">
+                <input id="notifyOnIncreaseOnly" type="checkbox" />
+                <span>Notify only when open seats increase</span>
+              </label>
+
+              <label class="checkRow">
+                <input id="playSound" type="checkbox" />
+                <span>Play ring sound on alert</span>
+              </label>
+
+              <div class="row">
+                <button id="saveSettings" class="btn btnPrimary" type="button">Save settings</button>
+                <button id="resetSettings" class="btn" type="button">Reset defaults</button>
+                <div id="settingsStatus" class="status"></div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="smallNote">
+                Settings are stored locally in Firefox. This extension monitors availability only and does not log in or enroll.
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

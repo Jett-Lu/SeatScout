@@ -1,0 +1,1 @@
+// background.js omitted here for brevity in explanation, full file included in zip
