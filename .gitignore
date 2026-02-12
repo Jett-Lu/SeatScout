@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Environment variables (NEVER commit secrets)
+.env
+
+# Local runtime data
+data.json
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
