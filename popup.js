@@ -1,4 +1,3 @@
-
 const api = typeof browser !== "undefined" ? browser : chrome;
 
 async function bg(msg) {
@@ -75,7 +74,10 @@ function renderWatches(watches) {
     const meta = document.createElement("div");
     meta.className = "watchMeta";
     const vaText = (w.va && w.va.trim().length > 0) ? `VA: ${w.va}` : "VA: (none)";
-    meta.textContent = `Term: ${w.term} | ${vaText}\nLast open: ${w.lastOpen} | Last check: ${fmtIso(w.lastCheckedIso)}`;
+
+    const lastErr = (w.lastError && String(w.lastError).trim().length > 0) ? `\nLast error: ${w.lastError}` : "";
+    meta.textContent =
+      `Term: ${w.term} | ${vaText}\nLast open: ${w.lastOpen} | Last check: ${fmtIso(w.lastCheckedIso)}${lastErr}`;
 
     left.appendChild(title);
     left.appendChild(meta);
@@ -137,7 +139,7 @@ function populateSections(sections) {
   for (const s of sections) {
     const opt = document.createElement("option");
     opt.value = s.section;
-    opt.textContent = `${s.section} (open ${s.open}/${s.capacity})`;
+    opt.textContent = `${s.section} (open ${s.open}/${s.capacity || "?"})`;
     select.appendChild(opt);
   }
 }
@@ -171,6 +173,14 @@ async function loadDraftAndSettings() {
 async function refresh() {
   const state = await bg({ type: "GET_STATE" });
   renderWatches(state.watches);
+
+  const d = state.diagnostics || {};
+  const parts = [];
+  if (d.lastRunEndIso) parts.push(`Last run: ${fmtIso(d.lastRunEndIso)}`);
+  if (typeof d.lastHttpStatus === "number") parts.push(`HTTP: ${d.lastHttpStatus}`);
+  if (typeof d.lastLatencyMs === "number") parts.push(`Latency: ${d.lastLatencyMs} ms`);
+  if (d.lastError) parts.push(`Error: ${d.lastError}`);
+  setText("loadStatus", parts.join(" | "));
 }
 
 document.getElementById("tabWatches").addEventListener("click", () => switchTab("watches"));
@@ -179,6 +189,7 @@ document.getElementById("tabSettings").addEventListener("click", () => switchTab
 document.getElementById("watchForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   showError("");
+  setText("loadStatus", "");
 
   const term = document.getElementById("term").value.trim();
   const course = document.getElementById("course").value.trim();
@@ -195,7 +206,6 @@ document.getElementById("watchForm").addEventListener("submit", async (e) => {
 
   try {
     await bg({ type: "ADD_WATCH", watch: { term, course, va, sectionDisp } });
-    setText("loadStatus", "Added.");
     await saveDraft();
     await refresh();
   } catch (err) {
@@ -230,7 +240,7 @@ document.getElementById("loadSections").addEventListener("click", async () => {
 document.getElementById("checkNow").addEventListener("click", async () => {
   setText("loadStatus", "Checking...");
   await bg({ type: "CHECK_NOW" });
-  setText("loadStatus", "Checked.");
+  await new Promise((r) => setTimeout(r, 250));
   await refresh();
 });
 
@@ -252,6 +262,7 @@ document.getElementById("saveSettings").addEventListener("click", async () => {
   await bg({ type: "SET_SETTINGS", settings: { intervalMinutes, notifyOnIncreaseOnly, playSound } });
   setText("settingsStatus", "Saved.");
   setTimeout(() => setText("settingsStatus", ""), 1500);
+  await refresh();
 });
 
 document.getElementById("resetSettings").addEventListener("click", async () => {
@@ -259,9 +270,10 @@ document.getElementById("resetSettings").addEventListener("click", async () => {
   await loadDraftAndSettings();
   setText("settingsStatus", "Reset.");
   setTimeout(() => setText("settingsStatus", ""), 1500);
+  await refresh();
 });
 
-for (const id of ["term","course","va","sectionManual"]) {
+for (const id of ["term", "course", "va", "sectionManual"]) {
   document.getElementById(id).addEventListener("input", () => { void saveDraft(); });
 }
 
